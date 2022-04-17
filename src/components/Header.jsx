@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { MenuRounded } from '@mui/icons-material';
 import {
@@ -10,14 +11,15 @@ import {
   Typography
 } from '@mui/material';
 
-import AppContext from '../Store';
 import { API_URL } from '../utils/constants';
+import { setUser, setAuthenticated } from '../store/userSlice';
 
 import './Style.css';
 
 const Header = () => {
+  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const { authenticated, setAuthenticated, setUser } = useContext(AppContext);
+  const authenticated = useSelector((state) => state.user.authenticated)
   const [cookies] = useCookies(['username', 'token']);
 
   const handleMenuClick = () => {
@@ -43,12 +45,18 @@ const Header = () => {
       })
         .then(response => response.json())
         .then(response => {
-          setAuthenticated(true);
-          setUser(response.user);
+          dispatch(setAuthenticated(true));
+          dispatch(setUser({
+            id: response.user.id,
+            name: response.user.name,
+            username: response.user.username,
+            token: response.user.token,
+            email: response.user.email
+          }));
         })
         .catch(error => console.error(error));
     }
-  }, [cookies, authenticated, setAuthenticated, setUser]);
+  }, [dispatch, cookies, authenticated]);
 
   return(
     <Paper elevation={3} sx={{ mb: '24px' }}>

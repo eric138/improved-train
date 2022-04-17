@@ -1,5 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import SignIn from '../views/SignIn';
 import SignOut from '../views/SignOut';
@@ -7,10 +8,8 @@ import Dashboard from '../views/Dashboard';
 import Home from '../views/Home';
 import Register from '../views/Register';
 
-import AppContext from '../Store';
-
 const AppRoutes = () => {
-  const { authenticated } = useContext(AppContext);
+  const authenticated = useSelector((state) => state.user.authenticated);
 
   return(
     <Routes>

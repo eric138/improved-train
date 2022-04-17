@@ -1,16 +1,17 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
 
 import { Button, Grid, Paper, Typography } from '@mui/material';
 
-import AppContext from '../Store';
+import { setUser, setAuthenticated } from '../store/userSlice';
 
 import './Style.css';
 
 const SignOut = () => {
   const navigate = useNavigate();
-  const { setUser, setAuthenticated } = useContext(AppContext);
+  const dispatch = useDispatch();
   // eslint-disable-next-line
   const [cookies, setCookie, removeCookie] = useCookies(['token', 'username']);
 
@@ -21,9 +22,15 @@ const SignOut = () => {
   useEffect(() => {
     removeCookie('token', { path: '/' });
     removeCookie('username', { path: '/' });
-    setUser(null);
-    setAuthenticated(false);
-  }, [setUser, setAuthenticated, removeCookie]);
+    dispatch(setUser({
+      id: null,
+      name: null,
+      username: null,
+      token: null,
+      email: null
+    }));
+    dispatch(setAuthenticated(false));
+  }, [dispatch, removeCookie]);
 
   return(
     <Paper elevation={3}>

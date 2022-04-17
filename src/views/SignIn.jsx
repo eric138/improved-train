@@ -1,6 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
 
 import {
   Button,
@@ -11,17 +12,17 @@ import {
 } from '@mui/material';
 
 import { API_URL } from '../utils/constants';
-import AppContext from '../Store';
+import { setUser, setAuthenticated } from '../store/userSlice';
 
 import './Style.css';
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // eslint-disable-next-line
   const [cookies, setCookie] = useCookies(['token', 'username']);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { setUser, setAuthenticated } = useContext(AppContext);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -46,15 +47,16 @@ const SignIn = () => {
       })
         .then(response => response.json())
         .then(response => {
-          setUser({
+          dispatch(setUser({
             id: response.userId,
             name: response.user.name,
             username: response.user.username,
+            email: response.user.email,
             token: response.token
-          });
+          }));
           setCookie('username', response.user.username, { path: '/' });
           setCookie('token', response.token, { path: '/' });
-          setAuthenticated(true);
+          dispatch(setAuthenticated(true));
           navigate('/dashboard');
         })
         .catch(error => {

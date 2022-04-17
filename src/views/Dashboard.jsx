@@ -1,18 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useCookies } from 'react-cookie';
-
-import AppContext from '../Store';
+import { useSelector } from 'react-redux';
 
 const Dashboard = () => {
-  const { user } = useContext(AppContext);
+  const id = useSelector((state) => state.user.id);
+  const name = useSelector((state) => state.user.name);
+  const username = useSelector((state) => state.user.username);
+  const token = useSelector((state) => state.user.token)
   const [cookies] = useCookies(['username', 'token'])
 
   return(
     <>
-      <div>{`${user.name}'s Dashboard`}</div>
-      <div>{`ID: ${user.id}`}</div>
-      <div>{`USERNAME: ${user.username}`}</div>
-      <div>{`TOKEN: ${user.token}`}</div>
+      <div>{`${name}'s Dashboard`}</div>
+      <div>{`ID: ${id}`}</div>
+      <div>{`USERNAME: ${username}`}</div>
+      <div>{`TOKEN: ${token}`}</div>
       <div>{`Cookie Username: ${cookies.username}`}</div>
       <div>{`Cookie Token: ${cookies.token}`}</div>
     </>
