@@ -58,64 +58,112 @@ const Header = () => {
     }
   }, [dispatch, cookies, authenticated]);
 
-  return(
-    <Paper elevation={3} sx={{ mb: '24px' }}>
-      <Grid
-        container
-        alignContent={'center'}
-      >
-        <Grid item xs={2}>
-          <MenuRounded
-            onClick={() => handleMenuClick()}
-            sx={{ margin: '12px' }}
-          />
-          <Drawer
-            anchor='left'
-            open={open}
-            onClose={handleOnClose}
+  return (
+    <Grid
+      container
+      direction='row'
+      alignItems='center'
+      justifyContent='start'
+      spacing={2}
+    >
+      <Grid item>
+        <MenuRounded
+          onClick={() => handleMenuClick()}
+        />
+        <Drawer
+          anchor='left'
+          open={open}
+          onClose={handleOnClose}
+        >
+          <Grid
+            container
+            direction='row'
+            alignItems='center'
+            justifyContent='center'
+            spacing={2}
           >
-            <div className='menu-bg'>
+            <Grid item>
               <Grid
                 container
-                alignContent={'center'}
+                direction='column'
+                alignItems='center'
+                justifyContent='center'
+                spacing={2}
               >
-                <Grid item xs={1}></Grid>
-                  <Grid item xs={10}>
-                    <Paper elevation={3} sx={{ mb: '12px' }}>
-                      <Link to='/' onClick={handleOnClose}>
-                        <Typography variant='h6' align='center'>Home</Typography>
-                      </Link>
-                    </Paper>
-                    <Paper elevation={3} sx={{ mb: '12px' }}>
-                      {authenticated ? 
-                        <Link to='/sign-out' onClick={handleOnClose}>
-                          <Typography variant='h6' align='center'>Sign Out</Typography>
-                        </Link> :
-                        <Link to='/sign-in' onClick={handleOnClose}>
-                          <Typography variant='h6' align='center'>Sign In</Typography>
-                        </Link>
-                      }
-                    </Paper>
-                    {authenticated && <Paper elevation={3} sx={{ mb: '12px' }}>
-                      <Link to='/dashboard' onClick={handleOnClose}>
-                        <Typography variant='h6' align='center'>Dashboard</Typography>
-                      </Link>
-                    </Paper>}
-                  </Grid>
-                <Grid item xs={1}></Grid>
+                <Grid item>
+                  <Link to='/' onClick={handleOnClose}>
+                    <Typography variant='h6' align='center'>Home</Typography>
+                  </Link>
+                </Grid>
               </Grid>
-            </div>
-          </Drawer>
-        </Grid>
-        <Grid
-          item
-          xs={8}
-        >
-        </Grid>
-        <Grid item xs={2}></Grid>
+            </Grid>
+          </Grid>
+        </Drawer>
       </Grid>
-    </Paper>
-  );
+      <Grid item>
+        <div>Search Bar</div>
+      </Grid>
+    </Grid>
+  )
 };
 
 export default Header;
+
+// return(
+//   <Paper elevation={3} sx={{ mb: '24px', width: '75%' }}>
+//     <Grid
+//       container
+//       alignContent={'center'}
+//     >
+//       <Grid item xs={2}>
+//         <MenuRounded
+//           onClick={() => handleMenuClick()}
+//           sx={{ margin: '12px' }}
+//         />
+//         <Drawer
+//           anchor='left'
+//           open={open}
+//           onClose={handleOnClose}
+//         >
+//           <div className='menu-bg'>
+//             <Grid
+//               container
+//               alignContent={'center'}
+//             >
+//               <Grid item xs={1}></Grid>
+//                 <Grid item xs={10}>
+//                   <Paper elevation={3} sx={{ mb: '12px' }}>
+//                     <Link to='/' onClick={handleOnClose}>
+//                       <Typography variant='h6' align='center'>Home</Typography>
+//                     </Link>
+//                   </Paper>
+//                   <Paper elevation={3} sx={{ mb: '12px' }}>
+//                     {authenticated ? 
+//                       <Link to='/sign-out' onClick={handleOnClose}>
+//                         <Typography variant='h6' align='center'>Sign Out</Typography>
+//                       </Link> :
+//                       <Link to='/sign-in' onClick={handleOnClose}>
+//                         <Typography variant='h6' align='center'>Sign In</Typography>
+//                       </Link>
+//                     }
+//                   </Paper>
+//                   {authenticated && <Paper elevation={3} sx={{ mb: '12px' }}>
+//                     <Link to='/dashboard' onClick={handleOnClose}>
+//                       <Typography variant='h6' align='center'>Dashboard</Typography>
+//                     </Link>
+//                   </Paper>}
+//                 </Grid>
+//               <Grid item xs={1}></Grid>
+//             </Grid>
+//           </div>
+//         </Drawer>
+//       </Grid>
+//       <Grid
+//         item
+//         xs={8}
+//       >
+//       </Grid>
+//       <Grid item xs={2}></Grid>
+//     </Grid>
+//   </Paper>
+// );
