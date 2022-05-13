@@ -6,7 +6,6 @@ import { useDispatch } from 'react-redux';
 import {
   Button,
   Grid,
-  Paper,
   TextField,
   Typography
 } from '@mui/material';
@@ -70,40 +69,53 @@ const SignIn = () => {
   };
 
   return(
-    <Paper elevation={3}>
       <Grid
         container
-        alignContent={'center'}
+        justifyContent='center'
+        alignItems='center'
+        spacing={2}
+        direction='row'
       >
-        <Grid item xs={2}></Grid>
-        <Grid
-          item
-          xs={8}
-        >
-          <Grid container alignContent={'center'} alignItems={'center'} spacing={2} sx={{ textAlign: 'center', marginTop: '12px', marginBottom: '12px' }}>
+        <Grid item xs={8}>
+          <Grid
+            container
+            justifyContent='center'
+            alignItems='center'
+            spacing={2}
+            direction='column'
+          >
             <Grid item xs={12}>
-              <Typography variant='h6'>Please Sign In</Typography>
+              <TextField
+                id='username'
+                label='Username'
+                variant='filled'
+                onChange={handleUsernameChange}
+                value={username}
+                autoFocus
+              />
             </Grid>
             <Grid item xs={12}>
-              <TextField id='username' label='Username' variant='filled' onChange={handleUsernameChange} value={username} autoFocus />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField id='password' label='Password' variant='filled' onChange={handlePasswordChange} value={password} type='password'/>
+              <TextField
+                id='password'
+                label='Password'
+                variant='filled'
+                onChange={handlePasswordChange}
+                value={password}
+                type='password'
+              />
             </Grid>
             <Grid item xs={12}>
               <Button size='large' onClick={handleLogin} variant='contained'>Log In</Button>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant='subtitle1'>Don't have an account?</Typography>
+              <Typography variant='subtitle1'>Need an account?</Typography>
             </Grid>
             <Grid item xs={12}>
               <Button size='small' onClick={handleRegister} variant='contained'>Register Now</Button>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={2}></Grid>
       </Grid>
-    </Paper>
   );
 };
 
