@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import { MenuRounded } from '@mui/icons-material';
 import {
@@ -10,16 +9,9 @@ import {
   Typography
 } from '@mui/material';
 
-import { API_URL } from '../utils/constants';
-import { setUser, setAuthenticated } from '../store/userSlice';
-
-import './Style.css';
-
 const Header = () => {
-  const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
-  const authenticated = useSelector((state) => state.user.authenticated)
-  const [cookies] = useCookies(['username', 'token']);
+  const authenticated = useSelector((state) => state.user.authenticated);
 
   const handleMenuClick = () => {
     setOpen(true);
@@ -28,34 +20,6 @@ const Header = () => {
   const handleOnClose = () => {
     setOpen(false);
   };
-
-  useEffect(() => {
-    if (!authenticated && cookies.username && cookies.token) {
-      fetch(`${API_URL}verify`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-api-key': process.env.REACT_APP_KEY
-        },
-        body: JSON.stringify({
-          'username': cookies.username,
-          'token': cookies.token
-        })
-      })
-        .then(response => response.json())
-        .then(response => {
-          dispatch(setAuthenticated(true));
-          dispatch(setUser({
-            id: response.user.id,
-            name: response.user.name,
-            username: response.user.username,
-            token: response.user.token,
-            email: response.user.email
-          }));
-        })
-        .catch(error => console.error(error));
-    }
-  }, [dispatch, cookies, authenticated]);
 
   return (
     <Grid

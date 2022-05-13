@@ -14,8 +14,6 @@ import {
 import { API_URL } from '../utils/constants';
 import { setUser, setAuthenticated } from '../store/userSlice';
 
-import './Style.css';
-
 const SignIn = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
