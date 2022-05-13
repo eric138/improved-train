@@ -111,7 +111,7 @@ const SignIn = () => {
               <Typography variant='subtitle1'>Need an account?</Typography>
             </Grid>
             <Grid item xs={12}>
-              <Button size='small' onClick={handleRegister} variant='contained'>Register Now</Button>
+              <Button size='small' onClick={handleRegister} variant='contained'>Register</Button>
             </Grid>
           </Grid>
         </Grid>
