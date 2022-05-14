@@ -41,7 +41,7 @@ const Register = () => {
   };
 
   const handleRegister = () => {
-    //Submit user
+    //Create user and return new id
     try {
       fetch(`${API_URL}register`, {
         method: 'POST',
@@ -58,19 +58,39 @@ const Register = () => {
       })
         .then(response => response.json())
         .then(response => {
-          //Call login api
-          //Set user in redux, head to dashboard
-          dispatch(setUser({
-            id: response.userId,
-            name: response.name,
-            username: response.username,
-            email: response.email,
-            token: response.token
-          }));
-          setCookie('username', response.user.username, { path: '/' });
-          setCookie('token', response.token, { path: '/' });
-          dispatch(setAuthenticated(true));
-          navigate('/dashboard');
+          //Call login api with id
+          try {
+            fetch(`${API_URL}login`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': process.env.REACT_APP_KEY
+              },
+              body: JSON.stringify({
+                'username': username,
+                'password': password
+              })
+            })
+              .then(response => response.json())
+              .then(response => {
+                dispatch(setUser({
+                  id: response.userId,
+                  name: response.user.name,
+                  username: response.user.username,
+                  email: response.user.email,
+                  token: response.token
+                }));
+                setCookie('username', response.user.username, { path: '/' });
+                setCookie('token', response.token, { path: '/' });
+                dispatch(setAuthenticated(true));
+                navigate('/dashboard');
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          } catch (error) {
+            console.error(error)
+          }
         })
         .catch(error => {
           console.error(error);
