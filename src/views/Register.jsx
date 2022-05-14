@@ -1,17 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
+import { useDispatch } from 'react-redux';
 
 import { Grid, TextField, Button } from '@mui/material';
 
 import { API_URL } from '../utils/constants';
+import { setUser, setAuthenticated } from '../store/userSlice';
 
 const Register = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  // eslint-disable-next-line
+  const [cookies, setCookie] = useCookies(['token', 'username']);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -51,21 +57,20 @@ const Register = () => {
         })
       })
         .then(response => response.json())
-        // .then(response => {
-        //   dispatch(setUser({
-        //     id: response.userId,
-        //     name: response.user.name,
-        //     username: response.user.username,
-        //     email: response.user.email,
-        //     token: response.token
-        //   }));
-        //   setCookie('username', response.user.username, { path: '/' });
-        //   setCookie('token', response.token, { path: '/' });
-        //   dispatch(setAuthenticated(true));
-        //   navigate('/dashboard');
-        // })
         .then(response => {
-          console.log('response', response);
+          //Call login api
+          //Set user in redux, head to dashboard
+          dispatch(setUser({
+            id: response.userId,
+            name: response.name,
+            username: response.username,
+            email: response.email,
+            token: response.token
+          }));
+          setCookie('username', response.user.username, { path: '/' });
+          setCookie('token', response.token, { path: '/' });
+          dispatch(setAuthenticated(true));
+          navigate('/dashboard');
         })
         .catch(error => {
           console.error(error);

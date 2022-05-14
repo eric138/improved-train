@@ -11,7 +11,6 @@ import {
 } from '@mui/material';
 
 import { API_URL } from '../utils/constants';
-import { logIn } from '../utils/api';
 import { setUser, setAuthenticated } from '../store/userSlice';
 
 const SignIn = () => {
@@ -31,43 +30,39 @@ const SignIn = () => {
   };
 
   const handleLogin = async () => {
-    const user = await logIn({
-      username,
-      password
-    });
-    console.log('user', user);
-    // try {
-    //   fetch(`${API_URL}login`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       'x-api-key': process.env.REACT_APP_KEY
-    //     },
-    //     body: JSON.stringify({
-    //       'username': username,
-    //       'password': password
-    //     })
-    //   })
-    //     .then(response => response.json())
-    //     .then(response => {
-    //       dispatch(setUser({
-    //         id: response.userId,
-    //         name: response.user.name,
-    //         username: response.user.username,
-    //         email: response.user.email,
-    //         token: response.token
-    //       }));
-    //       setCookie('username', response.user.username, { path: '/' });
-    //       setCookie('token', response.token, { path: '/' });
-    //       dispatch(setAuthenticated(true));
-    //       navigate('/dashboard');
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      fetch(`${API_URL}login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': process.env.REACT_APP_KEY
+        },
+        body: JSON.stringify({
+          'username': username,
+          'password': password
+        })
+      })
+        .then(response => response.json())
+        .then(response => {
+          console.log('response', response);
+          dispatch(setUser({
+            id: response.userId,
+            name: response.user.name,
+            username: response.user.username,
+            email: response.user.email,
+            token: response.token
+          }));
+          setCookie('username', response.user.username, { path: '/' });
+          setCookie('token', response.token, { path: '/' });
+          dispatch(setAuthenticated(true));
+          navigate('/dashboard');
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   const handleRegister = () => {
