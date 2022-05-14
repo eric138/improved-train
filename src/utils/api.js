@@ -1,6 +1,7 @@
 import { API_URL } from "./constants";
 
 export const logIn = async (user) => {
+  console.log('logIn called with: ', user);
   try {
     fetch(`${API_URL}login`, {
       method: 'POST',
@@ -15,6 +16,7 @@ export const logIn = async (user) => {
     })
       .then(response => response.json())
       .then(response => {
+        console.log('api response', response);
         return {
           userId: response.userId,
           name: response.user.name,
