@@ -21,6 +21,7 @@ const SignIn = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(false);
+  const [helperText, setHelperText] = useState();
   const authenticated = useSelector((state) => state.user.authenticated);
 
   const handleUsernameChange = (event) => {
@@ -47,7 +48,15 @@ const SignIn = () => {
       })
         .then(response => response.json())
         .then(response => {
+          console.log(response);
+          if (response.message) {
+            setError(true);
+            setHelperText('Username or password is incorrect.');
+            console.error(response.message);
+            return;
+          }
           setError(false);
+          setHelperText(null);
           dispatch(setUser({
             id: response.userId,
             name: response.user.name,
@@ -61,7 +70,6 @@ const SignIn = () => {
           navigate('/dashboard');
         })
         .catch(error => {
-          setError(true);
           console.error(error);
         });
     } catch (error) {
@@ -125,6 +133,7 @@ const SignIn = () => {
                       onChange={handlePasswordChange}
                       value={password}
                       type='password'
+                      helperText={helperText}
                     />
                   </Grid>
                   <Grid item>

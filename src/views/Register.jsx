@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
 import { useDispatch } from 'react-redux';
@@ -16,8 +16,23 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
+  const [matchError, setMatchError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState();
+  const [submitDisable, setSubmitDisable] = useState(true);
   // eslint-disable-next-line
   const [cookies, setCookie] = useCookies(['token', 'username']);
+
+  useEffect(() => {
+    if (confirmPassword === password) {
+      setMatchError(false);
+      setErrorMessage(null);
+    } else {
+      setMatchError(true);
+      setErrorMessage('Passwords do not match.')
+    }
+
+    //Check if everything is ready for submit then enable button
+  }, [password, confirmPassword]);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -130,13 +145,36 @@ const Register = () => {
               <TextField id='name' label='Name' variant='filled' onChange={handleNameChange} value={name} />
             </Grid>
             <Grid item>
-              <TextField id='password' label='Password' variant='filled' onChange={handlePasswordChange} value={password} type='password'/>
+              <TextField
+                id='password'
+                label='Password'
+                variant='filled'
+                onChange={handlePasswordChange}
+                value={password}
+                type='password'
+              />
             </Grid>
             <Grid item>
-              <TextField id='confirmPassword' label='Confirm Password' variant='filled' onChange={handleConfirmPasswordChange} value={confirmPassword} type='password'/>
+              <TextField
+                id='confirmPassword'
+                label='Confirm Password'
+                variant='filled'
+                error={matchError}
+                onChange={handleConfirmPasswordChange}
+                value={confirmPassword}
+                type='password'
+                helperText={errorMessage}
+              />
             </Grid>
             <Grid item>
-              <Button size='large' type='submit' variant='contained'>Register</Button>
+              <Button
+                size='large'
+                type='submit'
+                variant='contained'
+                disabled={submitDisable}
+              >
+                Register
+              </Button>
             </Grid>
           </Grid>
         </form>
