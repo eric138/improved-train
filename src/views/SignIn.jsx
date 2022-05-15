@@ -30,8 +30,8 @@ const SignIn = () => {
     setPassword(event.target.value);
   };
 
-  const handleLogin = async () => {
-    console.log('handleLogin called');
+  const handleLogin = async (event) => {
+    event.preventDefault();
     try {
       fetch(`${API_URL}login`, {
         method: 'POST',
@@ -92,7 +92,7 @@ const SignIn = () => {
             spacing={2}
             direction='column'
           >
-            <Grid item xs={12}>
+            <Grid item>
               <form onSubmit={handleLogin}>
                 <Grid
                   container
@@ -127,10 +127,10 @@ const SignIn = () => {
                 </Grid>
               </form>
             </Grid>
-            <Grid item xs={12}>
-              <Typography variant='subtitle1'>Need an account?</Typography>
+            <Grid item>
+              <Typography variant='subtitle1' sx={{ textAlign: 'center' }}>Need an account?</Typography>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item>
               <Button size='small' onClick={handleRegister} variant='contained'>Register</Button>
             </Grid>
           </Grid>

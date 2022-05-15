@@ -40,7 +40,8 @@ const Register = () => {
     setName(event.target.value);
   };
 
-  const handleRegister = () => {
+  const handleRegister = (event) => {
+    event.preventDefault();
     //Create user and return new id
     try {
       fetch(`${API_URL}register`, {
@@ -111,22 +112,34 @@ const Register = () => {
       direction='column'
     >
       <Grid item>
-        <TextField id='username' label='Username' variant='filled' onChange={handleUsernameChange} value={username} autoFocus />
-      </Grid>
-      <Grid item>
-        <TextField id='email' label='Email' variant='filled' onChange={handleEmailChange} value={email} />
-      </Grid>
-      <Grid item>
-        <TextField id='name' label='Name' variant='filled' onChange={handleNameChange} value={name} />
-      </Grid>
-      <Grid item>
-        <TextField id='password' label='Password' variant='filled' onChange={handlePasswordChange} value={password} type='password'/>
-      </Grid>
-      <Grid item>
-        <TextField id='confirmPassword' label='Confirm Password' variant='filled' onChange={handleConfirmPasswordChange} value={confirmPassword} type='password'/>
-      </Grid>
-      <Grid item>
-        <Button size='large' onClick={handleRegister} variant='contained'>Register</Button>
+        <form onSubmit={handleRegister}>
+          <Grid
+            container
+            justifyContent='center'
+            alignItems='center'
+            spacing={2}
+            direction='column'
+          >
+            <Grid item>
+              <TextField id='username' label='Username' variant='filled' onChange={handleUsernameChange} value={username} autoFocus />
+            </Grid>
+            <Grid item>
+              <TextField id='email' label='Email' variant='filled' onChange={handleEmailChange} value={email} />
+            </Grid>
+            <Grid item>
+              <TextField id='name' label='Name' variant='filled' onChange={handleNameChange} value={name} />
+            </Grid>
+            <Grid item>
+              <TextField id='password' label='Password' variant='filled' onChange={handlePasswordChange} value={password} type='password'/>
+            </Grid>
+            <Grid item>
+              <TextField id='confirmPassword' label='Confirm Password' variant='filled' onChange={handleConfirmPasswordChange} value={confirmPassword} type='password'/>
+            </Grid>
+            <Grid item>
+              <Button size='large' type='submit' variant='contained'>Register</Button>
+            </Grid>
+          </Grid>
+        </form>
       </Grid>
     </Grid>
   )

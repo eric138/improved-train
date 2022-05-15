@@ -62,7 +62,7 @@ const App = () => {
           <Grid item>
             <Header />
           </Grid>
-          <Grid item sx={{ marginTop: 12 }}>
+          <Grid item sx={{ marginTop: 18 }}>
             <AppRoutes />
           </Grid>
         </Grid>
