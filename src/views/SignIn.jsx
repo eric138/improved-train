@@ -20,6 +20,7 @@ const SignIn = () => {
   const [cookies, setCookie] = useCookies(['token', 'username']);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(false);
   const authenticated = useSelector((state) => state.user.authenticated);
 
   const handleUsernameChange = (event) => {
@@ -46,6 +47,7 @@ const SignIn = () => {
       })
         .then(response => response.json())
         .then(response => {
+          setError(false);
           dispatch(setUser({
             id: response.userId,
             name: response.user.name,
@@ -59,9 +61,11 @@ const SignIn = () => {
           navigate('/dashboard');
         })
         .catch(error => {
+          setError(true);
           console.error(error);
         });
     } catch (error) {
+      setError(true);
       console.error(error);
     }
   };
@@ -106,6 +110,7 @@ const SignIn = () => {
                       id='username'
                       label='Username'
                       variant='filled'
+                      error={error}
                       onChange={handleUsernameChange}
                       value={username}
                       autoFocus
@@ -116,6 +121,7 @@ const SignIn = () => {
                       id='password'
                       label='Password'
                       variant='filled'
+                      error={error}
                       onChange={handlePasswordChange}
                       value={password}
                       type='password'
