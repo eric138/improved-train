@@ -67,7 +67,7 @@ const Register = () => {
                 'x-api-key': process.env.REACT_APP_KEY
               },
               body: JSON.stringify({
-                'username': username,
+                'username': response.username,
                 'password': password
               })
             })

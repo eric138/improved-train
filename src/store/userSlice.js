@@ -15,6 +15,7 @@ export const userSlice = createSlice({
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.username = action.payload.username;
+      state.email = action.payload.email;
       state.token = action.payload.token;
     },
     setAuthenticated: (state, action) => {

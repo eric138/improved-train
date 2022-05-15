@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCookies } from 'react-cookie';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import {
   Button,
@@ -20,6 +20,7 @@ const SignIn = () => {
   const [cookies, setCookie] = useCookies(['token', 'username']);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const authenticated = useSelector((state) => state.user.authenticated);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -30,6 +31,7 @@ const SignIn = () => {
   };
 
   const handleLogin = async () => {
+    console.log('handleLogin called');
     try {
       fetch(`${API_URL}login`, {
         method: 'POST',
@@ -44,7 +46,6 @@ const SignIn = () => {
       })
         .then(response => response.json())
         .then(response => {
-          console.log('response', response);
           dispatch(setUser({
             id: response.userId,
             name: response.user.name,
@@ -69,6 +70,12 @@ const SignIn = () => {
     navigate('/register')
   };
 
+  useEffect(() => {
+    if (authenticated) {
+      navigate('/dashboard');
+    }
+  }, [navigate, authenticated]);
+
   return(
       <Grid
         container
@@ -86,27 +93,39 @@ const SignIn = () => {
             direction='column'
           >
             <Grid item xs={12}>
-              <TextField
-                id='username'
-                label='Username'
-                variant='filled'
-                onChange={handleUsernameChange}
-                value={username}
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                id='password'
-                label='Password'
-                variant='filled'
-                onChange={handlePasswordChange}
-                value={password}
-                type='password'
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Button size='large' onClick={handleLogin} variant='contained'>Log In</Button>
+              <form onSubmit={handleLogin}>
+                <Grid
+                  container
+                  justifyContent='center'
+                  alignItems='center'
+                  spacing={2}
+                  direction='column'
+                >
+                  <Grid item>
+                    <TextField
+                      id='username'
+                      label='Username'
+                      variant='filled'
+                      onChange={handleUsernameChange}
+                      value={username}
+                      autoFocus
+                    />
+                  </Grid>
+                  <Grid item>
+                    <TextField
+                      id='password'
+                      label='Password'
+                      variant='filled'
+                      onChange={handlePasswordChange}
+                      value={password}
+                      type='password'
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Button size='large' type='submit' variant='contained'>Log In</Button>
+                  </Grid>
+                </Grid>
+              </form>
             </Grid>
             <Grid item xs={12}>
               <Typography variant='subtitle1'>Need an account?</Typography>
