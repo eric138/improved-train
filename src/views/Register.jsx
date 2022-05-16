@@ -19,6 +19,8 @@ const Register = () => {
   const [matchError, setMatchError] = useState(false);
   const [errorMessage, setErrorMessage] = useState();
   const [submitDisable, setSubmitDisable] = useState(true);
+  const [usernameError, setUsernameError] = useState(false);
+  const [usernameErrorMessage, setUsernameErrorMessage] = useState('');
   // eslint-disable-next-line
   const [cookies, setCookie] = useCookies(['token', 'username']);
 
@@ -32,7 +34,12 @@ const Register = () => {
     }
 
     //Check if everything is ready for submit then enable button
-  }, [password, confirmPassword]);
+    if (!matchError && username && password && confirmPassword && email && name) {
+      setSubmitDisable(false);
+    } else {
+      setSubmitDisable(true);
+    }
+  }, [password, confirmPassword, email, matchError, name, username]);
 
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
@@ -43,7 +50,6 @@ const Register = () => {
   };
 
   const handleConfirmPasswordChange = (event) => {
-    //Add error handling here
     setConfirmPassword(event.target.value);
   };
 
@@ -74,38 +80,51 @@ const Register = () => {
       })
         .then(response => response.json())
         .then(response => {
-          //Call login api with id
-          try {
-            fetch(`${API_URL}login`, {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-                'x-api-key': process.env.REACT_APP_KEY
-              },
-              body: JSON.stringify({
-                'username': response.username,
-                'password': password
+          if (response.message) {
+            setUsernameError(true);
+            setUsernameErrorMessage('Username taken.');
+            console.error(response.message);
+            return;
+          } else {
+            //Call login api with id
+            setUsernameError(false);
+            setUsernameErrorMessage('');
+            try {
+              fetch(`${API_URL}login`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'x-api-key': process.env.REACT_APP_KEY
+                },
+                body: JSON.stringify({
+                  'username': response.username,
+                  'password': password
+                })
               })
-            })
-              .then(response => response.json())
-              .then(response => {
-                dispatch(setUser({
-                  id: response.userId,
-                  name: response.user.name,
-                  username: response.user.username,
-                  email: response.user.email,
-                  token: response.token
-                }));
-                setCookie('username', response.user.username, { path: '/' });
-                setCookie('token', response.token, { path: '/' });
-                dispatch(setAuthenticated(true));
-                navigate('/dashboard');
-              })
-              .catch(error => {
-                console.error(error);
-              });
-          } catch (error) {
-            console.error(error)
+                .then(response => response.json())
+                .then(response => {
+                  if (response.message) {
+                    console.error(response.message);
+                    navigate('/sign-in');
+                  }
+                  dispatch(setUser({
+                    id: response.userId,
+                    name: response.user.name,
+                    username: response.user.username,
+                    email: response.user.email,
+                    token: response.token
+                  }));
+                  setCookie('username', response.user.username, { path: '/' });
+                  setCookie('token', response.token, { path: '/' });
+                  dispatch(setAuthenticated(true));
+                  navigate('/dashboard');
+                })
+                .catch(error => {
+                  console.error(error);
+                });
+            } catch (error) {
+              console.error(error)
+            }
           }
         })
         .catch(error => {
@@ -114,8 +133,6 @@ const Register = () => {
     } catch (error) {
       console.error(error);
     }
-    //Change to sign in
-    navigate('/sign-in')
   };
 
   return(
@@ -136,7 +153,16 @@ const Register = () => {
             direction='column'
           >
             <Grid item>
-              <TextField id='username' label='Username' variant='filled' onChange={handleUsernameChange} value={username} autoFocus />
+              <TextField
+                id='username'
+                label='Username'
+                variant='filled'
+                error={usernameError}
+                helperText={usernameErrorMessage}
+                onChange={handleUsernameChange}
+                value={username}
+                autoFocus
+              />
             </Grid>
             <Grid item>
               <TextField id='email' label='Email' variant='filled' onChange={handleEmailChange} value={email} />

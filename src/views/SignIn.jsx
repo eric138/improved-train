@@ -48,7 +48,6 @@ const SignIn = () => {
       })
         .then(response => response.json())
         .then(response => {
-          console.log(response);
           if (response.message) {
             setError(true);
             setHelperText('Username or password is incorrect.');
